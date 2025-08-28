@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>cameras</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    #  stylesheet_link_tag "application", "data-turbo-track": "reload"
+    <%= vite_react_refresh_tag %>
+    <%= vite_javascript_tag 'entrypoints/application.tsx' %>
+  </head>
+
+  <body>
+    <main class="">
+      <%= yield %>
+    </main>
+  </body>
+</html>
