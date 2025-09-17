@@ -61,15 +61,13 @@ module Services
       res.parsed_response["elements"]
     end
 
-    # TODO: tested XML creation
-    #       not tested - changeset open/close, node create
     # Public - Makes a POST request to add a camera
     #
     # token          - OAuth token
     # camera_details - Hash { lat:, lon:, fields }
     def self.add_camera(token:, camera_details:)
       comment      = "Add surveillance camera"
-      changeset_id = Private.osm_open_changeset(token: token)
+      changeset_id = Private.osm_open_changeset(token: token, comment: comment)
 
       begin
         node_id = Private.osm_create_node(
@@ -131,7 +129,7 @@ module Services
       #
       # res    - Response from OpenStreetMaps
       # action - String. Function request performed in
-      def ok_or_raise(res, action)
+      def self.ok_or_raise(res, action)
         return if res.code.to_i.between? 200, 299
 
         raise "#{action} failed: #{res.code} #{res.message} - #{res.body}"
@@ -141,13 +139,13 @@ module Services
       #
       # token        - OAuth token
       # changeset_id - ID of opened changeset
-      def osm_close_changeset(token:, changeset_id:)
+      def self.osm_close_changeset(token:, changeset_id:)
         res = HTTParty.put(
           "#{OSM_URL}/changeset/#{changeset_id}/close",
           headers: headers(token)
         )
 
-        ok_or_raise(res, "close changeset")
+        Private.ok_or_raise(res, "close changeset")
       end
 
       # Internal - Adds a camera to OSM
@@ -172,7 +170,7 @@ module Services
           body:    xml
         )
 
-        ok_or_raise(res, "create node")
+        Private.ok_or_raise(res, "create node")
 
         res.body.strip
       end
@@ -199,7 +197,7 @@ module Services
           body:    xml
         )
 
-        ok_or_raise(res, "open changeset")
+        Private.ok_or_raise(res, "open changeset")
 
         res.body.strip
       end

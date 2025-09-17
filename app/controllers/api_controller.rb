@@ -4,7 +4,10 @@ class ApiController < ApplicationController
 
     # POST: Create an OSM camera
     def create_osm_camera
-      # TODO: return if not authenticated
+      unless session[:osm_access_token]
+        render json: { error: "Not authorized. No session found." }, status: :unauthorized and return
+      end
+
       camera_details = params.require(:camera_details)
                             .permit(
                               "camera:type",
@@ -16,13 +19,13 @@ class ApiController < ApplicationController
                               "lon"
                              )
                             .to_h
+
       res = Services::OpenStreetMaps.add_camera(
         token:          session[:osm_access_token],
         camera_details: camera_details
       )
 
-      # TODO: response
-      # TODO: handle expired authentication
+      render json: res, status: :ok
     end
 
     # GET: Returns all cameras from OpenStreetMaps

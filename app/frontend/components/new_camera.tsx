@@ -5,6 +5,7 @@ import axios                   from 'axios'
 
 
 export default function NewCamera() {
+  const [ errorMsg, setErrorMsg ]   = useState(null)
   const [ position, setPosition ]   = useState<LatLng | null>(null)
   const [ isLoading, setIsLoading ] = useState(false)
 
@@ -50,6 +51,7 @@ export default function NewCamera() {
   // Makes POST request to process new camera
   const submitCamera = () => {
     setIsLoading(true)
+    setErrorMsg(null)
 
     const camera_details = {
       // "camera:direction": 0, // TODO
@@ -65,12 +67,14 @@ export default function NewCamera() {
 
     axios.post("/api/add-open-street-map-camera", { camera_details }, { withCredentials: true } )
       .then(res => {
-        console.log('res')
         setPosition(null)
         setIsLoading(false)
       }).catch(err => {
-        console.log(err)
         setIsLoading(false)
+
+        if (err.response && err.response.status === 401) {
+          setErrorMsg("You must authenticate with Open Streen Maps to add cameras")
+        }
       })
 }
 
@@ -169,6 +173,8 @@ export default function NewCamera() {
         >
           {isLoading ? "Loading…" : "Submit"}
         </button>
+
+        { errorMsg }
 
       </div>
     </Popup>
