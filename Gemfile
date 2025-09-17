@@ -21,6 +21,7 @@ gem "jbuilder"
 # gem "bcrypt", "~> 3.1.7"
 
 # app-specific
+gem 'csv', '~> 3.3.0'
 gem "dotenv-rails"
 gem 'httparty'
 gem "rack-cors"

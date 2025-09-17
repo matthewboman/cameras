@@ -1,10 +1,10 @@
 class ApiController < ApplicationController
-    protect_from_forgery with: :null_session
+    # protect_from_forgery with: :null_session
+    skip_before_action :verify_authenticity_token
 
     # POST: Create an OSM camera
     def create_osm_camera
       # TODO: return if not authenticated
-
       camera_details = params.require(:camera_details)
                             .permit(
                               "camera:type",

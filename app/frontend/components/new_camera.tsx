@@ -5,7 +5,8 @@ import axios                   from 'axios'
 
 
 export default function NewCamera() {
-  const [ position, setPosition ] = useState<LatLng | null>(null)
+  const [ position, setPosition ]   = useState<LatLng | null>(null)
+  const [ isLoading, setIsLoading ] = useState(false)
 
   const [ cameraType, setCameraType ]     = useState("")
   const [ cameraMount, setCameraMount ]   = useState("")
@@ -48,8 +49,10 @@ export default function NewCamera() {
 
   // Makes POST request to process new camera
   const submitCamera = () => {
+    setIsLoading(true)
+
     const camera_details = {
-      "camera:direction": 0, // TODO
+      // "camera:direction": 0, // TODO
       "camera:mount":     cameraMount  || undefined,
       "camera:type":      cameraType   || undefined,
       "description":      description  || undefined,
@@ -60,12 +63,14 @@ export default function NewCamera() {
       "lon":              position.lng
     }
 
-    axios.post("/api/add-open-street-map-camera", { camera_details } )
+    axios.post("/api/add-open-street-map-camera", { camera_details }, { withCredentials: true } )
       .then(res => {
         console.log('res')
         setPosition(null)
+        setIsLoading(false)
       }).catch(err => {
         console.log(err)
+        setIsLoading(false)
       })
 }
 
@@ -77,7 +82,7 @@ export default function NewCamera() {
       eventHandlers={{ remove: () => setPosition(null) }}
     >
       <div>
-        <label className="block">
+        <label className="block mb-2">
           <span className="text-sm">surveillance area</span>
           <select
             className="mt-1 w-full rounded-md border px-2 py-1 text-sm"
@@ -92,7 +97,7 @@ export default function NewCamera() {
           </select>
         </label>
 
-        <label className="block">
+        <label className="block mb-2">
           <span className="text-sm">camera:type</span>
           <select
             className="mt-1 w-full rounded-md border px-2 py-1 text-sm"
@@ -108,7 +113,7 @@ export default function NewCamera() {
           </select>
         </label>
 
-        <label className="block">
+        <label className="block mb-2">
           <span className="text-sm">manufacturer</span>
           <select
             className="mt-1 w-full rounded-md border px-2 py-1 text-sm"
@@ -123,7 +128,7 @@ export default function NewCamera() {
           </select>
         </label>
 
-        <label className="block">
+        <label className="block mb-2">
           <span className="text-sm">camera:mount</span>
           <input
             className="mt-1 w-full rounded-md border px-2 py-1 text-sm"
@@ -133,7 +138,7 @@ export default function NewCamera() {
           />
         </label>
 
-        <label className="block">
+        <label className="block mb-2">
           <span className="text-sm">name</span>
           <input
             className="mt-1 w-full rounded-md border px-2 py-1 text-sm"
@@ -143,7 +148,7 @@ export default function NewCamera() {
           />
         </label>
 
-        <label className="block">
+        <label className="block mb-2">
           <span className="text-sm">description</span>
           <textarea
             className="mt-1 w-full rounded-md border px-2 py-1 text-sm"
@@ -157,11 +162,12 @@ export default function NewCamera() {
         {/* TODO: set direction */}
 
         <button
+          disabled={isLoading}
           type="button"
           onClick={submitCamera}
-          className="rounded-md border px-3 py-1 text-sm"
+          className="rounded-md border px-3 py-1 text-sm hover:cursor-pointer"
         >
-          Submit
+          {isLoading ? "Loading…" : "Submit"}
         </button>
 
       </div>

@@ -4,6 +4,39 @@ module Services
     OSM_URL      = "https://api.openstreetmap.org/api/0.6"
     OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 
+    # Public: Creates a CSV
+    def self.create_csv(bbox)
+      cameras = get_cameras(bbox)
+
+      res = CSV.generate do |csv|
+        csv << [
+          'id',
+          'lat',
+          'lng',
+          'company',
+          'type',
+          'surveillance type',
+          'zone',
+          'webcam'
+        ]
+
+        cameras.each do |camera|
+          csv << [
+            camera['id'],
+            camera['lat'],
+            camera['lon'],
+            camera['tags']['manufacturer'],
+            camera['tags']['camera:type'],
+            camera['tags']['surveillance:type'],
+            camera['tags']['surveillance:zone'],
+            camera['tags']['contact:webcam']
+          ]
+        end
+      end
+
+      File.write(Rails.root.join("tmp", "avl.csv"), res)
+    end
+
     # Public - Makes a POST request to get cameras
     #
     # bbox - String of comma-separated bounds "south,west,north,east"

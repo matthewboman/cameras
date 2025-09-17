@@ -1,0 +1,7 @@
+development:
+  osm:
+    redirect_url: "http://127.0.0.1:3000/auth/osm/callback"
+
+production:
+  osm:
+    redirect_url: "TODO"

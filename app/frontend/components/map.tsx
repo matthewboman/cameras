@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet'
 import axios from 'axios'
 import 'leaflet/dist/leaflet.css'
 
@@ -8,12 +8,11 @@ import CameraDetails from './camera_details'
 import NewCamera     from './new_camera'
 
 // Updates map coordinates
-function BoundsTracker({ setBounds }) {
-  useMapEvents({
-    moveend: (e) => {
-      const map = e.target
-      const b   = map.getBounds()
+const BoundsTracker = ({ setBounds }) => {
+  const map = useMap()
 
+  const updateBounds = () => {
+      const b    = map.getBounds()
       const bbox = [
         b.getSouth(),
         b.getWest(),
@@ -22,7 +21,14 @@ function BoundsTracker({ setBounds }) {
       ].join(",")
 
       setBounds(bbox)
-    },
+  }
+
+  useEffect(() => {
+    updateBounds()
+  }, [map])
+
+  useMapEvents({
+    moveend: updateBounds,
   })
 
   return null
@@ -35,7 +41,6 @@ export default function Map() {
   const [ bounds, setBounds ]         = useState(null)
 
   // Load cameras on mount
-  // TODO: doesn't seem to be working
   useEffect(() => {
     loadCameras(bounds)
   }, [])
@@ -50,7 +55,6 @@ export default function Map() {
     if (!bounds) return
 
     axios.get(`/api/open-street-map-cameras?bbox=${bounds}`).then((res) => {
-      console.log(res)
       setOsmCameras(res.data.cameras)
     })
   }
