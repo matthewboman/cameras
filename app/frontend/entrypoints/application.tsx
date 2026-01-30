@@ -1,35 +1,30 @@
-import { createRoot } from 'react-dom/client'
-import {
-  BrowserRouter,
-  Outlet,
-  Routes,
-  Route
-} from "react-router-dom"
-import Home from '../pages/home.js'
+import { createRoot } from "react-dom/client"
+
+// Components
+import Map    from '../components/map.tsx'
+import Navbar from "../components/navbar.tsx"
+
+// Pages
+import Ice    from '../pages/ice.tsx'
+import Home   from '../pages/home.tsx'
 
 import "../styles/application.css"
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const rootElement = document.getElementById('root')!
-const root = createRoot(rootElement)
+document.addEventListener("DOMContentLoaded", () => {
+  const components = {
+    Ice,
+    Home,
+    Map,
+    Navbar
+  }
 
-function Layout() {
-  return (
-    <>
-      {/* <Navbar /> */}
-      <Outlet />
-    </>
-  )
-}
+  document.querySelectorAll("[data-react]").forEach(el => {
+    const name      = el.dataset.react
+    const Component = components[name]
+    const props     = JSON.parse(el.getAttribute("data-props") || "{}")
 
-root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route element={<Layout />}>
-        <Route
-          path    = "/"
-          element = {<Home />} />
-      </Route>
-    </Routes>
-  </BrowserRouter>
-)
+    if (Component) {
+      createRoot(el).render(<Component { ...props } />)
+    }
+  })
+})

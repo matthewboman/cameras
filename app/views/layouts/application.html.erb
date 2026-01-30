@@ -6,11 +6,17 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= vite_react_refresh_tag %>
+    <%= vite_client_tag %>
+    <%= stylesheet_link_tag "application.css", "data-turbo-track": "reload" %>
     <%= vite_javascript_tag 'entrypoints/application.tsx' %>
   </head>
 
-  <body>
-    <main class="">
+  <body class="bg-gray text-gray min-h-screen">
+    <%= render "shared/navbar",
+        user_id:           @user_id,
+        is_admin:          @is_admin,
+        is_data_collector: @is_data_collector %>
+    <main class="flex-1 px-4 py-8">
       <%= yield %>
     </main>
   </body>

@@ -1,1 +1,9 @@
-<div id="root"></div>
+<div data-react="Map"
+     data-props="<%= {
+       isAdmin:         @is_admin,
+       isDataCollector: @is_data_collector,
+       isIceVerifier:   @is_ice_verified,
+       userId:          @user_id,
+       datasets:        ['cameras', 'ice']
+     }.to_json %>">
+</div>

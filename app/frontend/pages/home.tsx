@@ -1,11 +1,9 @@
-import Map    from '../components/map.tsx'
-import Navbar from '../components/navbar.tsx'
+import Map from '../components/map.tsx'
 import 'leaflet/dist/leaflet.css'
 
-const Home = () => (
+const Home = ({ userId }) => (
   <div className="">
-    <Navbar />
-    <Map />
+    <Map userId={userId} datasets={['cameras', 'ice']}/>
   </div>
 )
 

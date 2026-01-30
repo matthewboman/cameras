@@ -1,0 +1,43 @@
+<h1 class="text-2xl font-bold mb-6">Users</h1>
+
+<div class="space-y-6">
+  <% @users.each do |user| %>
+    <div class="border rounded-lg p-4 bg-white shadow">
+
+      <div class="mb-4">
+        <div class="text-lg font-semibold"><%= user.email %></div>
+      </div>
+
+      <%= form_with model: user, url: admin_update_user_path(user), method: :patch, local: true, class: "space-y-4" do |f| %>
+        <div class="grid grid-cols-6 gap-4">
+
+          <label class="flex items-center space-x-2">
+            <%= f.check_box :is_registered, class: "h-4 w-4" %>
+            <span class="text-sm">Registered</span>
+          </label>
+
+          <label class="flex items-center space-x-2">
+            <%= f.check_box :is_ice_verified, class: "h-4 w-4" %>
+            <span class="text-sm">ICE Verifier</span>
+          </label>
+
+          <label class="flex items-center space-x-2">
+            <%= f.check_box :is_data_collector, class: "h-4 w-4" %>
+            <span class="text-sm">Data Collector</span>
+          </label>
+
+          <label class="flex items-center space-x-2">
+            <%= f.check_box :is_admin, class: "h-4 w-4" %>
+            <span class="text-sm">Admin</span>
+          </label>
+        </div>
+
+          <div class="h-4 w-4">
+            <%= f.submit "Update", class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+          </div>
+
+      <% end %>
+
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,22 @@
+<%= render "shared/auth_form",
+    title: "Login",
+    form_options: { url: "/login", method: :post },
+    submit_text: "Log In" do |f| %>
+
+  <div>
+    <%= label_tag :email, "Email", class: "block text-sm font-medium text-gray-300 mb-1" %>
+    <%= text_field_tag :email, nil,
+          class: "w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500" %>
+  </div>
+
+  <div>
+    <%= label_tag :password, "Password", class: "block text-sm font-medium text-gray-300 mb-1" %>
+    <%= password_field_tag :password, nil,
+          class: "w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-gray-100 focus:ring-2 focus:ring-indigo-500" %>
+  </div>
+<% end %>
+
+<div>
+  Don't have an account? You can
+  <a href="/signup">signup here</a>
+</div>

@@ -1,11 +1,11 @@
 import { useState } from "react"
 
-export default function Navbar() {
-  const [open, setOpen] = useState(false)
+export default function Navbar({ isDataCollector, userId }) {
+  const [ open, setOpen ] = useState(false)
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 h-12 bg-white/90 backdrop-blur border-b flex items-center justify-end px-4 z-[2002] mb-2">
+      <nav className="h-12 bg-white/90 backdrop-blur border-b flex items-center justify-end px-4 z-[2002] mb-2">
         <button
           onClick={() => setOpen(v => !v)}
           className="p-2 rounded-lg hover:bg-gray-100 focus:outline-none"
@@ -28,23 +28,26 @@ export default function Navbar() {
 
       {open && (
         <>
-          <div
-            className="fixed inset-0 z-[2000]"
-            onClick={() => setOpen(false)}
-          />
-          <div
-            id="menu"
-            role="menu"
-            className="fixed right-4 top-12 w-44 rounded-lg border bg-white shadow-lg py-2 z-[2001]"
-          >
-            <a
+          <div className="fixed inset-0 z-[2000]" onClick={() => setOpen(false)} />
+          <div id="menu" role="menu" className="fixed right-4 top-12 w-44 rounded-lg border bg-white shadow-lg py-2 z-[2001]">
+            {userId ?
+              <a href="/logout" role="menuitem" className="block px-3 py-2 text-sm hover:bg-gray-50">
+                log out
+              </a> :
+              <a href="/login" role="menuitem" className="block px-3 py-2 text-sm hover:bg-gray-50">
+                login
+              </a>
+            }
+            {isDataCollector ? <a
               href="/auth/osm/start"
               role="menuitem"
               className="block px-3 py-2 text-sm hover:bg-gray-50"
               onClick={() => setOpen(false)}
             >
               authenticate with OSM
-            </a>
+            </a> : ''
+            }
+
             <a
               href="https://github.com/matthewboman/cameras"
               role="menuitem"

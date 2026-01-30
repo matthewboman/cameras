@@ -29,6 +29,8 @@
 !/tmp/storage/
 !/tmp/storage/.keep
 
+/app/assets/builds/
+/public/vite-dev/
 /public/assets
 /node_modules
 

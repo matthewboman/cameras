@@ -1,0 +1,17 @@
+<div class="flex items-center justify-center min-h-screen">
+  <div class="p-8 w-full max-w-md">
+    <h1 class="text-3xl font-bold text-center mb-6"><%= title %></h1>
+
+    <%= form_with **form_options, class: "space-y-5" do |f| %>
+      <%= yield f %>
+
+      <div class="text-center">
+        <%= submit_tag submit_text, class: "w-full bg-indigo-600 text-white font-medium py-2 rounded hover:bg-indigo-500 transition" %>
+      </div>
+    <% end %>
+
+    <% if flash[:alert] %>
+      <p class="text-red-400 text-sm text-center mt-4"><%= flash[:alert] %></p>
+    <% end %>
+  </div>
+</div>
