@@ -39,6 +39,7 @@ export default function Map({
   const [ iceData, setIceData ]         = useState([])
   const [ osmCameras, setOsmCameras ]   = useState([])
   const [ position, setPosition ]       = useState(null)
+  const [ refreshKey, setRefreshKey ]   = useState(0)
   const [ showAddMenu, setShowAddMenu ] = useState(false)
   const [ showAddress, setShowAddress ] = useState(false)
 
@@ -76,7 +77,7 @@ export default function Map({
 
       if (typeof fn === 'function') fn(bounds)
     })
-  }, [ datasets, bounds, registry ])
+  }, [ datasets, bounds, refreshKey, registry ])
 
   // Set map center to user's location
   useEffect(() => {
@@ -107,6 +108,8 @@ export default function Map({
     } else {
       setFormType(null)
     }
+
+    setRefreshKey(k => k + 1)
   }
 
   // Whether a user can add data

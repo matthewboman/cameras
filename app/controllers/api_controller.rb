@@ -46,7 +46,7 @@ class ApiController < ApplicationController
                       )
 
       if details[:address].blank?
-        # TODO
+        details[:address] = Services::OpenStreetMaps.get_address_from_geo location: details[:location]
       end
 
       res = IceDataset.create(
@@ -60,7 +60,7 @@ class ApiController < ApplicationController
       )
 
       if res.errors.blank?
-        render json: {}, status: 200
+        render json: res, status: 200
       else
         render json: { error: "Error creating report" }, status: 500
       end
@@ -80,6 +80,7 @@ class ApiController < ApplicationController
         title:        i.title,
         body:         i.body,
         category:     i.category,
+        address:      i.address,
         verfied:      i.verfied,
         spotted_on:   i.spotted_on,
         spotted_time: i.spotted_time,

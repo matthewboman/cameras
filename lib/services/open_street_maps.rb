@@ -3,6 +3,7 @@ module Services
     OSM_UA       = "Cameras/1.0 (+ccrsh@riseup.net)"
     OSM_URL      = "https://api.openstreetmap.org/api/0.6"
     OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+    ADDRESS_URL  = "https://nominatim.openstreetmap.org/reverse"
 
     # Public: Creates a CSV
     def self.create_csv(bbox)
@@ -37,7 +38,28 @@ module Services
       File.write(Rails.root.join("tmp", "avl.csv"), res)
     end
 
-    # Public - Makes a POST request to get cameras
+    # Public: Makes a GET request to retrieve address fron geolocation
+    #
+    # location - hash of { lat:, lng: }
+    #
+    # Returns a string
+    def self.get_address_from_geo(location:)
+      res = HTTParty.get(
+        ADDRESS_URL,
+        query: {
+          format: 'json',
+          lat:    location[:lat],
+          lon:    location[:lng]
+        },
+        headers: {
+          'User-Agent' => 'cameras'
+        }
+      )
+
+      res['display_name']
+    end
+
+    # Public: Makes a POST request to get cameras
     #
     # bbox - String of comma-separated bounds "south,west,north,east"
     #

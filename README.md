@@ -3,9 +3,6 @@
 - postgres && postgis
 
 # TODO
-- address
-  - add address from geo if none --> should we note this?
-  - display address
 - camera icons
 - admin edit
   - ice

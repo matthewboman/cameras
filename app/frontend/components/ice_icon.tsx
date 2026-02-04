@@ -56,9 +56,13 @@ export default function IceIcon({ data }) {
 
   // Combines date and time
   const dateTime = (date, time) => {
+    if (!time) return moment(date, 'YYYY-MM-DD')
+
+    const t = moment.utc(time).format('HH:mm')
+
     return moment(
-      time ? `${date} ${time}` : date,
-      time ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD'
+      `${date} ${t}`,
+      'YYYY-MM-DD HH:mm'
     )
   }
 
@@ -98,7 +102,10 @@ export default function IceIcon({ data }) {
           </div>
         </div>
         <div className="text-sm mb-2">
-            { data.body }
+          { data.body }
+        </div>
+        <div className="text-sm mb-2">
+          { data.address }
         </div>
         <div>
           <div className="text-sm">
