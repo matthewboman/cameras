@@ -1,7 +1,7 @@
 import { useState } from "react"
 import axios        from 'axios'
 
-export default function IceForm({ position, userId, onSubmit }) {
+export default function IceForm({ address, position, userId, onSubmit }) {
   const [ errorMsg, setErrorMsg ]   = useState(null)
   const [ isLoading, setIsLoading ] = useState(false)
 
@@ -36,7 +36,10 @@ export default function IceForm({ position, userId, onSubmit }) {
       category:    category,
       date:        date,
       description: description,
-      time:        time
+      time:        time,
+      title:       title,
+      address:     address,
+      location:    position
     }
 
     axios.post("/api/report-ice", { report }, { withCredentials: true })

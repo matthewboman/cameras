@@ -42,14 +42,24 @@ export default function IceIcon({ data }) {
     .join(" ")
 
   // Set color based on time
-  const color = datetime => {
+  const color = (date, time) => {
+    if (time == null) return "bg-green-600"
+
     const now = moment()
-    const t   = moment(datetime)
+    const t   = dateTime(date, time)
 
     if (now.diff(t, "hours") < 2) return "bg-red-600"
     if (now.isSame(t, "day"))     return "bg-yellow-500"
 
     return "bg-green-600"
+  }
+
+  // Combines date and time
+  const dateTime = (date, time) => {
+    return moment(
+      time ? `${date} ${time}` : date,
+      time ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD'
+    )
   }
 
   // Set icon based on report type
@@ -64,7 +74,7 @@ export default function IceIcon({ data }) {
     el.className = `
       w-8 h-8 flex items-center justify-center
       rounded-full border-2 border-white shadow-lg
-      ${color(data.spotted_at)}
+      ${color(data.spotted_on, data.spotted_time)}
     `
     createRoot(el).render(iconType(data.report_type))
 
@@ -92,7 +102,7 @@ export default function IceIcon({ data }) {
         </div>
         <div>
           <div className="text-sm">
-            { moment(data.spotted_at).format("dddd, MMMM D - h:mm A") }
+            { dateTime(data.spotted_on, data.spotted_time).format("dddd, MMMM D - h:mm A") }
           </div>
         </div>
       </Popup>

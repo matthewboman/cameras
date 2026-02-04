@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_30_164621) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_04_182644) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "postgis"
@@ -20,12 +20,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_30_164621) do
     t.string "body"
     t.string "category"
     t.string "address"
-    t.datetime "spotted_at"
     t.boolean "verfied", default: false, null: false
     t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "report_type"
+    t.date "spotted_on"
+    t.time "spotted_time"
     t.index ["location"], name: "index_ice_datasets_on_location", using: :gist
   end
 

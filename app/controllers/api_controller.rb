@@ -36,15 +36,34 @@ class ApiController < ApplicationController
 
       details = params.require(:report)
                       .permit(
-                        'category',
-                        'date',
-                        'description',
-                        'time'
+                        :category,
+                        :date,
+                        :description,
+                        :time,
+                        :title,
+                        :address,
+                        location: [:lat, :lng]
                       )
-                      .to_h
-      # TODO: build this
-      # TODO: change `spotted_at`: separate date AND time
-      debugger
+
+      if details[:address].blank?
+        # TODO
+      end
+
+      res = IceDataset.create(
+        title:        details[:title],
+        body:         details[:description],
+        spotted_on:   details[:date],
+        spotted_time: details[:time],
+        category:     details[:category],
+        address:      details[:address],
+        location:     "POINT(#{details[:location]['lng']} #{details[:location]['lat']})"
+      )
+
+      if res.errors.blank?
+        render json: {}, status: 200
+      else
+        render json: { error: "Error creating report" }, status: 500
+      end
     end
 
     # GET: Returns ICE activity
@@ -55,15 +74,16 @@ class ApiController < ApplicationController
         "location && ST_MakeEnvelope(?, ?, ?, ?, 4326)::geography",
         min_lng, min_lat, max_lng, max_lat
       ).map{|i| {
-        id:          i.id,
-        lat:         i.lat,
-        lon:         i.lon,
-        title:       i.title,
-        body:        i.body,
-        category:    i.category,
-        verfied:     i.verfied,
-        spotted_at:  i.spotted_at,
-        report_type: i.report_type
+        id:           i.id,
+        lat:          i.lat,
+        lon:          i.lon,
+        title:        i.title,
+        body:         i.body,
+        category:     i.category,
+        verfied:      i.verfied,
+        spotted_on:   i.spotted_on,
+        spotted_time: i.spotted_time,
+        report_type:  i.category
       }}
 
       render json: { ice: ice }

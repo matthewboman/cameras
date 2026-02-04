@@ -28,9 +28,11 @@ export default function Map({
   isDataCollector,
   isIceVerified,
   userId,
-  datasets = []
+  datasets = [],
+  iceOnly
 }) {
   const [ addMode, setAddMode ]         = useState(null)
+  const [ address, setAddress ]         = useState(null)
   const [ bounds, setBounds ]           = useState(null)
   const [ center, setCenter ]           = useState(DEFAULT_CENTER)
   const [ formType, setFormType ]       = useState(null)
@@ -88,13 +90,23 @@ export default function Map({
     { enableHighAccuracy: true, timeout: 5000 }
   )}, [])
 
+  // Handle settings specific to ICE map
+  useEffect(() => {
+    setFormType('ice')
+  }, iceOnly)
+
   // Clear state once user has submitted
   const resetFlow = () => {
     setAddMode(null)
     setShowAddMenu(false)
     setShowAddress(false)
     setPosition(null)
-    setFormType(null)
+
+    if (iceOnly) {
+      setFormType('ice')
+    } else {
+      setFormType(null)
+    }
   }
 
   // Whether a user can add data
@@ -143,11 +155,11 @@ export default function Map({
             )}
 
             { formType === 'ice' && (
-              <IceForm position={setPosition} userId={userId} onSubmit={resetFlow} />
+              <IceForm address={address} position={position} userId={userId} onSubmit={resetFlow} />
             )}
 
             { formType === 'camera' && (
-              <NewCamera position={setPosition} userId={userId} onSubmit={resetFlow} />
+              <NewCamera position={position} userId={userId} onSubmit={resetFlow} />
             )}
 
             <button className="mt-4 rounded-md border px-3 py-1 text-sm" onClick={resetFlow}>
@@ -183,8 +195,9 @@ export default function Map({
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/30">
           <div className="bg-white rounded-md shadow-lg p-6 w-[400px]">
             <AddressSearch
-              onSelect={({ lat, lng }) => {
+              onSelect={({ lat, lng, address }) => {
                 setPosition({ lat, lng })
+                setAddress(address)
                 setShowAddress(false)
               }}
             />

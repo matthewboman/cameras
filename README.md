@@ -3,17 +3,16 @@
 - postgres && postgis
 
 # TODO
-- hide camera-related stuff from ICE map
-- update DB to track time && date separately, allowing for unknown time
-- create ICE backend workflow
+- address
+  - add address from geo if none --> should we note this?
+  - display address
 - camera icons
 - admin edit
   - ice
   - cameras
-- display address on ICE (and cameras?)
-  - add address field, send to backend
-  - get address from lat/lng
 - password reset process
 - what are other datasets?
-- ability to filter ICE data by type
+- ability to filter ICE data
+  - by type
+  - by date
 

@@ -49,9 +49,9 @@ export default function AddressSearch({ onSelect }) {
               className="cursor-pointer px-2 py-1 text-sm hover:bg-gray-100"
               onClick={() => {
                 onSelect({
-                  lat:   Number(r.lat),
-                  lng:   Number(r.lon),
-                  label: r.display_name,
+                  lat:     Number(r.lat),
+                  lng:     Number(r.lon),
+                  address: r.display_name,
                 })
                 setQuery(r.display_name)
                 setResults([])
