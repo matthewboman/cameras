@@ -1,0 +1,56 @@
+
+<div class="max-w-2xl mx-auto space-y-6">
+<h1 class="text-2xl font-bold mb-8">Users</h1>
+
+
+  <% @users.each do |user| %>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
+
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-gray-100">
+        <div class="text-lg font-semibold text-gray-900">
+          <%= user.email %>
+        </div>
+      </div>
+
+      <%= form_with model: user,
+                    url: admin_update_user_path(user),
+                    method: :patch,
+                    local: true do |f| %>
+
+        <!-- Roles -->
+        <div class="px-6 py-4 space-y-3">
+
+          <label class="flex items-center gap-3 text-sm text-gray-700">
+            <%= f.check_box :is_registered, class: "h-4 w-4 rounded border-gray-300" %>
+            Registered
+          </label>
+
+          <label class="flex items-center gap-3 text-sm text-gray-700">
+            <%= f.check_box :is_ice_verified, class: "h-4 w-4 rounded border-gray-300" %>
+            ICE Verifier
+          </label>
+
+          <label class="flex items-center gap-3 text-sm text-gray-700">
+            <%= f.check_box :is_data_collector, class: "h-4 w-4 rounded border-gray-300" %>
+            Data Collector
+          </label>
+
+          <label class="flex items-center gap-3 text-sm text-gray-700">
+            <%= f.check_box :is_admin, class: "h-4 w-4 rounded border-gray-300" %>
+            Admin
+          </label>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="px-6 py-4 border-t border-gray-100">
+          <%= f.submit "Update",
+                class: "px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition" %>
+        </div>
+
+      <% end %>
+
+    </div>
+  <% end %>
+</div>

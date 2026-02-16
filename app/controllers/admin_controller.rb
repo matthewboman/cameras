@@ -3,10 +3,32 @@ class AdminController < ApplicationController
 
   # GET: Landing page
   def index
+  end
+
+  # GET: Translation page
+  def translate
+    @datasets = IceDataset.needs_translation
+  end
+
+  # GET: User management page
+  def user_management
     @users = User.all
   end
 
-  # PUT: Update user permissions
+  # PATCH: Add a translation
+  def update_translation
+    dataset = IceDataset.find(params[:id])
+    attrs   = params.require(:ice_dataset)
+                    .permit(:title, :body, :es_title, :es_body)
+                    .to_h
+                    .transform_values { |v| v.is_a?(String) && v.strip == "" ? nil : v }
+
+    dataset.update!(attrs)
+
+    redirect_to admin_translate_path, notice: "Saved"
+  end
+
+  # PATCH: Update user permissions
   def update_user
     user = User.find(params[:id])
 

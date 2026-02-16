@@ -20,9 +20,12 @@ Rails.application.routes.draw do
   post "/login",  to: "sessions#create"
   post "/signup", to: "users#create"
 
-  # User admin
-  get   "/admin",                 to: "admin#index"
-  patch "/admin/update-user/:id", to: "admin#update_user", as: :admin_update_user
+  # Admin
+  get   "/admin",                        to: "admin#index"
+  get   "/admin/translate",              to: "admin#translate"
+  get   "/admin/user-management",        to: "admin#user_management"
+  patch "/admin/update-translation/:id", to: "admin#update_translation", as: :admin_update_translation
+  patch "/admin/update-user/:id",        to: "admin#update_user", as: :admin_update_user
 
   root "home#index"
 

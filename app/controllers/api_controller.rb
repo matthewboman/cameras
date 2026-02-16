@@ -42,16 +42,27 @@ class ApiController < ApplicationController
                         :time,
                         :title,
                         :address,
+                        :language,
                         location: [:lat, :lng]
                       )
 
+      # Get the address
       if details[:address].blank?
         details[:address] = Services::OpenStreetMaps.get_address_from_geo location: details[:location]
       end
 
+      # Handle language
+      language = details[:language].to_s.downcase
+      title    = language == "eng" ? details[:title]       : nil
+      body     = language == "eng" ? details[:description] : nil
+      es_title = language == "es"  ? details[:title]       : nil
+      es_body  = language == "es"  ? details[:description] : nil
+
       res = IceDataset.create(
-        title:        details[:title],
-        body:         details[:description],
+        title:        title,
+        es_title:     es_title,
+        body:         body,
+        es_body:      es_body,
         spotted_on:   details[:date],
         spotted_time: details[:time],
         category:     details[:category],
