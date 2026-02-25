@@ -52,11 +52,11 @@ class ApiController < ApplicationController
       end
 
       # Handle language
-      language = details[:language].to_s.downcase
-      title    = language == "eng" ? details[:title]       : nil
-      body     = language == "eng" ? details[:description] : nil
-      es_title = language == "es"  ? details[:title]       : nil
-      es_body  = language == "es"  ? details[:description] : nil
+      language = details[:language].to_s
+      title    = language == "ENG" ? details[:title]       : nil
+      body     = language == "ENG" ? details[:description] : nil
+      es_title = language == "ES"  ? details[:title]       : nil
+      es_body  = language == "ES"  ? details[:description] : nil
 
       res = IceDataset.create(
         title:        title,
@@ -81,22 +81,10 @@ class ApiController < ApplicationController
     def ice_activity
       min_lat, min_lng, max_lat, max_lng = params[:bbox].split(",").map(&:to_f)
 
-      ice = IceDataset.where(
-        "location && ST_MakeEnvelope(?, ?, ?, ?, 4326)::geography",
-        min_lng, min_lat, max_lng, max_lat
-      ).map{|i| {
-        id:           i.id,
-        lat:          i.lat,
-        lon:          i.lon,
-        title:        i.title,
-        body:         i.body,
-        category:     i.category,
-        address:      i.address,
-        verfied:      i.verfied,
-        spotted_on:   i.spotted_on,
-        spotted_time: i.spotted_time,
-        report_type:  i.category
-      }}
+      ice = IceDataset.by_coordinates(min_lat, min_lng, max_lat, max_lng)
+                      .by_categories(params[:categories])
+                      .by_date(params[:start_date], params[:end_date])
+                      .map{|i| Services::Format.ice_for_map(i)}
 
       render json: { ice: ice }
     end

@@ -34,7 +34,7 @@ class AdminController < ApplicationController
 
     user.update(user_params)
 
-    redirect_to "/admin", notice: "Updated."
+    redirect_to "/admin/user-management", notice: "Updated."
   end
 
   private

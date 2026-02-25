@@ -9,7 +9,3 @@
   - cameras
 - password reset process
 - what are other datasets?
-- ability to filter ICE data
-  - by type
-  - by date
-

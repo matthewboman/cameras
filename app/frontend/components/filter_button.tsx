@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useMap }    from "react-leaflet"
 import L             from "leaflet"
 
-export default function AddButton({ onClick }) {
+export default function FilterButton({ onClick }) {
   const map = useMap()
 
   useEffect(() => {
@@ -10,9 +10,10 @@ export default function AddButton({ onClick }) {
 
     control.onAdd = () => {
       const div = L.DomUtil.create("div")
+
       div.innerHTML = `
-        <button class="w-12 h-12 rounded-full bg-gray-800 text-white flex items-center justify-center shadow-lg text-2xl hover:bg-gray-700">
-          +
+        <button class="w-12 h-12 rounded-full bg-gray-800 text-white flex items-center justify-center shadow-lg text-xl hover:bg-gray-700">
+          ☰
         </button>
       `
 

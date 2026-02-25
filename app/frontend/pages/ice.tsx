@@ -6,9 +6,12 @@ import 'leaflet/dist/leaflet.css'
 import AddButton       from '../components/add_button'
 import AddressSearch   from '../components/address_search'
 import BoundsTracker   from '../components/bounds_tracker'
+import FilterButton    from '../components/filter_button'
+import FilterPanel     from '../components/filter_panel'
 import IceIcon         from '../components/ice_icon'
 import IceForm         from '../components/ice_form'
 import Point           from '../components/point'
+
 import { useLanguage } from "../hooks/language"
 
 // Asheville
@@ -23,11 +26,13 @@ export default function Ice({
   const [ address, setAddress ]         = useState(null)
   const [ bounds, setBounds ]           = useState(null)
   const [ center, setCenter ]           = useState(DEFAULT_CENTER)
+  const [ filters, setFilters ]         = useState({ categories: [], startDate: '', endDate: '' })
   const [ iceData, setIceData ]         = useState([])
   const [ position, setPosition ]       = useState(null)
   const [ refreshKey, setRefreshKey ]   = useState(0)
   const [ showAddMenu, setShowAddMenu ] = useState(false)
   const [ showAddress, setShowAddress ] = useState(false)
+  const [ showFilters, setShowFilters ] = useState(false)
 
   const { language } = useLanguage()
 
@@ -37,10 +42,26 @@ export default function Ice({
   }
 
   // Makes GET request to load ICE activity
-  const loadIce = (bounds) => {
+  const loadIce = (bounds, filters) => {
     if (!bounds) return
 
-    axios.get(`/api/ice-activity?bbox=${bounds}`).then((res) => {
+    const params = new URLSearchParams({
+      bbox: bounds
+    })
+
+    if (filters.categories?.length > 0) {
+      params.append("categories", filters.categories.join(","))
+    }
+
+    if (filters.startDate) {
+      params.append("start_date", filters.startDate)
+    }
+
+    if (filters.endDate) {
+      params.append("end_date", filters.endDate)
+    }
+
+    axios.get(`/api/ice-activity?${params.toString()}`).then((res) => {
       const ice = res?.data?.ice || []
 
       setIceData(ice)
@@ -58,8 +79,8 @@ export default function Ice({
 
   // Load data on mount
   useEffect(() => {
-    loadIce(bounds)
-  }, [ bounds, refreshKey ])
+    loadIce(bounds, filters)
+  }, [ bounds, filters, refreshKey ])
 
   // Set map center to user's location
   useEffect(() => {
@@ -74,6 +95,7 @@ export default function Ice({
   )}, [])
 
   return (
+  <div>
     <MapContainer center={center} zoom={13} scrollWheelZoom={false}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -154,7 +176,20 @@ export default function Ice({
 
       { position && <IceForm address={address} position={position} userId={userId} onSubmit={resetFlow} /> }
       { canAdd && <AddButton onClick={() => setShowAddMenu(true)} /> }
+      <FilterButton onClick={() => setShowFilters(true)} />
     </MapContainer>
+
+    { showFilters && (
+        <div className="absolute bottom-24 right-4 z-[1000]">
+          <div className="relative bg-white rounded-xl shadow-xl">
+            <button onClick={() => setShowFilters(false)} className="absolute top-2 right-3 text-gray-500 text-lg">
+              x
+            </button>
+            <FilterPanel onChange={setFilters} />
+          </div>
+        </div>
+      )}
+  </div>
   )
 }
 

@@ -23,7 +23,7 @@ import Point         from './point'
 // Asheville
 const DEFAULT_CENTER = [ 35.5975, -82.5461 ]
 
-export default function Map({
+export default function Main({
   isAdmin,
   isDataCollector,
   isIceVerified,

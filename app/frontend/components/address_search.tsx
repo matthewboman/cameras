@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react"
 
+import { useLanguage } from "../hooks/language"
+
 const DEBOUNCE = 400 // ms
 
 export default function AddressSearch({ onSelect }) {
   const [ loading, setLoading ] = useState(false)
   const [ query, setQuery ]     = useState("")
   const [ results, setResults ] = useState([])
+
+  const { language } = useLanguage()
 
   useEffect(() => {
     if (!query || query.length < 3) {
@@ -16,7 +20,7 @@ export default function AddressSearch({ onSelect }) {
     const timeout = setTimeout(async () => {
       setLoading(true)
 
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+      const res  = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
       const data = await res.json()
 
       setResults(data)
@@ -37,7 +41,7 @@ export default function AddressSearch({ onSelect }) {
 
       { loading && (
         <div className="absolute right-2 top-2 text-xs text-gray-400">
-          loading…
+          { language == 'ES' ? 'Cargando...' : 'loading...'}
         </div>
       )}
 
